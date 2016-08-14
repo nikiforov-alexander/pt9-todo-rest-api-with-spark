@@ -27,8 +27,13 @@ public class TodoImpl implements TodoDao {
     }
 
     @Override
-    public Todo findById() {
-        return null;
+    public Todo findById(int id) {
+        try (Connection connection = sql2o.open()) {
+            return connection.createQuery(
+                    "SELECT * FROM todos WHERE id = :id")
+                    .addParameter("id", id)
+                    .executeAndFetchFirst(Todo.class);
+        }
     }
 
     @Override
