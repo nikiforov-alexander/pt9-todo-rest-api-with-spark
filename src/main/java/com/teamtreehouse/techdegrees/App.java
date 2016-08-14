@@ -8,7 +8,9 @@ import com.teamtreehouse.techdegrees.exception.ApiError;
 import com.teamtreehouse.techdegrees.model.Todo;
 import org.sql2o.Sql2o;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static spark.Spark.*;
 
@@ -58,6 +60,17 @@ public class App {
 
         // after each request we make response of type application/json
         after((request, response) -> response.type("application/json"));
+
+        // exception handler
+        exception(ApiError.class, (exception, request, response) -> {
+            ApiError apiError = (ApiError) exception;
+            Map<String, Object> jsonMap = new HashMap<>();
+            jsonMap.put("status", apiError.getStatus());
+            jsonMap.put("errorMessage", apiError.getMessage());
+            response.type("application/json");
+            response.status(apiError.getStatus());
+            response.body(gson.toJson(jsonMap));
+        });
     }
 
 }
