@@ -7,6 +7,8 @@ public class TodoTask {
     private String name;
     // column in database BOOLEAN
     private boolean completed;
+    // column in database BOOLEAN
+    private boolean edited;
 
     // Getters and Setters
 
@@ -34,10 +36,19 @@ public class TodoTask {
         this.completed = completed;
     }
 
+    public boolean isEdited() {
+        return edited;
+    }
+
+    public void setEdited(boolean edited) {
+        this.edited = edited;
+    }
+
     // only constructor
-    public TodoTask(String name, boolean completed) {
+    public TodoTask(String name, boolean completed, boolean edited) {
         this.name = name;
         this.completed = completed;
+        this.edited = true;
     }
 
     // equals and hashcode and ToString
@@ -69,6 +80,7 @@ public class TodoTask {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", completed=" + completed +
+                ", edited=" + edited +
                 '}';
     }
 }
