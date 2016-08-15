@@ -11,9 +11,7 @@ import org.sql2o.Connection;
 import org.sql2o.Sql2o;
 import spark.Spark;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import static org.junit.Assert.*;
@@ -37,9 +35,14 @@ public class AppTest {
     // Dao with CRUDs of database
     private TodoDao todoDao;
 
-    // Test todo task will be the first one in db
+    // Test todoTask will be the first one in db
     private TodoTask firstTestTodoTask =
             new TodoTask("Todo 1", false, false);
+
+    // test Model Map that will be used to make test POST request with
+    // first todoTask
+    private Map<String, Object> todoTaskMapWithFirstTestTodoTask =
+            new HashMap<>();
 
     @BeforeClass
     public static void startServer() {
@@ -56,6 +59,18 @@ public class AppTest {
     @AfterClass
     public static void stopServer() {
         Spark.stop();
+    }
+
+    // used in setUp method, and used in `update` tests to create
+    // map to be sent with PUT request with changed data
+    private void fillTodoTaskMapWithDataFromTestTodoTask() {
+        // fill testTodoTaskMap with data from test TodoTask
+        todoTaskMapWithFirstTestTodoTask.put("name",
+                firstTestTodoTask.getName());
+        todoTaskMapWithFirstTestTodoTask.put("edited",
+                firstTestTodoTask.isEdited());
+        todoTaskMapWithFirstTestTodoTask.put("completed",
+                firstTestTodoTask.isCompleted());
     }
 
     @Before
@@ -81,6 +96,15 @@ public class AppTest {
         // initialize ApiClient connecting to server
         apiClient = new ApiClient("http://localhost:" + PORT);
 
+        // fill todoTaskMap with data from firstTestTodoTask. Ready
+        // to make POST request to add new task to db
+        // important: id will be 0, so that id is auto-generated to 1
+        fillTodoTaskMapWithDataFromTestTodoTask();
+
+        // because after saving to db id of the test task will be set to 1
+        // we set it here manually, to test the returned from db todoTask
+        // with this one
+        firstTestTodoTask.setId(1);
     }
 
     @After
@@ -92,24 +116,19 @@ public class AppTest {
     @Test
     public void addingTodoReturnsCreatedStatus() throws Exception {
         // Arrange:
-        // create Map to be converted in JSON in request
-        Map<String, Object> todoTaskMap = new HashMap<>();
-        // put all properties of test TodoTask object there
-        todoTaskMap.put("name", firstTestTodoTask.getName());
-        todoTaskMap.put("edited", firstTestTodoTask.isEdited());
-        todoTaskMap.put("completed", firstTestTodoTask.isCompleted());
-        // because after saving to db id of the test task will be set to 1
-        // we set it here manually
-        firstTestTodoTask.setId(1);
+        // In this test todoTaskMapWithFirstTestTodoTask and
+        // firstTestTodoTask will be used.
+        // They are generated in setUp method, ready to be sent as request
 
         // Act, Assert:
         // When POST request is made to "/api/v1/todos", to add
-        // new TodoTask, with JSON created from map above
+        // new TodoTask, with JSON created from
+        // todoTaskMapWithFirstTestTodoTask
         ApiResponse apiResponse =
                 apiClient.request(
                         "POST",
                         "/api/v1/todos",
-                        gson.toJson(todoTaskMap)
+                        gson.toJson(todoTaskMapWithFirstTestTodoTask)
                 );
 
         // status should be 201
@@ -126,26 +145,19 @@ public class AppTest {
     @Test
     public void getRequestToIndexPageReturnsListOfTodos() throws Exception {
         // Arrange:
-        // create Map to be converted in JSON in request
-        Map<String, Object> todoTaskMap = new HashMap<>();
-        // put all properties of test TodoTask object there
-        todoTaskMap.put("name", firstTestTodoTask.getName());
-        todoTaskMap.put("edited", firstTestTodoTask.isEdited());
-        todoTaskMap.put("completed", firstTestTodoTask.isCompleted());
-        // because after saving to db id of the test task will be set to 1
-        // we set it here manually
-        firstTestTodoTask.setId(1);
-        // finally we add two test todoTasks to db: should be OK: they will
+        // like before we use firstTodoTask and
+        // todoTaskMapWithFirstTestTodoTask.
+        // Also we add two same test todoTasks to db: should be OK: they will
         // have different ids
         apiClient.request(
                 "POST",
                 "/api/v1/todos",
-                gson.toJson(todoTaskMap)
+                gson.toJson(todoTaskMapWithFirstTestTodoTask)
         );
         apiClient.request(
                 "POST",
                 "/api/v1/todos",
-                gson.toJson(todoTaskMap)
+                gson.toJson(todoTaskMapWithFirstTestTodoTask)
         );
 
         // Act, Assert:
@@ -169,4 +181,46 @@ public class AppTest {
         //      First element should be our test task
         assertEquals(firstTestTodoTask, todoTasks[0]);
     }
+
+    @Test
+    public void updatingTodoTaskActuallyUpdatesTodoTask() throws Exception {
+        // Arrange:
+        //   1. Here firstTestTodoTask and todoTaskMapWithFirstTestTodoTask will
+        //   be used to add test todoTask to db.
+        //   2. We add firstTestTodoTask to database with POST below
+        apiClient.request(
+                "POST",
+                "/api/v1/todos",
+                gson.toJson(todoTaskMapWithFirstTestTodoTask)
+        );
+        //   3. Then we change name of the firstTodoTask
+        firstTestTodoTask.setName("new name");
+        //   4. fill the taskMap with changed firstTestTodoTask data, to
+        //   make PUT request
+        fillTodoTaskMapWithDataFromTestTodoTask();
+
+        // Act, Assert:
+        // When PUT request is made to "/api/v1/todos/1", to update
+        //  test TodoTask, with JSON created from map of test todoTask
+        //  with new name
+        // (Here we manually write 1 as id).
+        ApiResponse apiResponse =
+                apiClient.request(
+                        "PUT",
+                        "/api/v1/todos/1",
+                        gson.toJson(todoTaskMapWithFirstTestTodoTask)
+                );
+
+        // Then:
+        // - status should be 200
+        assertEquals(200, apiResponse.getStatus());
+
+        // the task from response converted from JSON should be
+        // exactly our firstTestTodoTask
+        TodoTask updatedTodoTask = gson.fromJson(
+                apiResponse.getBody(),
+                TodoTask.class);
+        assertEquals(firstTestTodoTask, updatedTodoTask);
+    }
+
 }
