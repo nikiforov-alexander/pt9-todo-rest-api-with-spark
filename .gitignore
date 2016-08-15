@@ -3,3 +3,6 @@
 /src/main/resources/static/vendor/
 /.idea/gradle.xml
 /.idea/misc.xml
+.idea/workspace.xml
+build/
+src/main/resources/static/
