@@ -5,6 +5,8 @@ public class TodoTask {
     private int id;
     // column in database VARCHAR NAME
     private String name;
+    // column in database BOOLEAN
+    private boolean completed;
 
     // Getters and Setters
 
@@ -24,12 +26,21 @@ public class TodoTask {
         this.name = name;
     }
 
-    // only constructor
-    public TodoTask(String name) {
-        this.name = name;
+    public boolean isCompleted() {
+        return completed;
     }
 
-    // equals and hashcode
+    public void setCompleted(boolean completed) {
+        this.completed = completed;
+    }
+
+    // only constructor
+    public TodoTask(String name, boolean completed) {
+        this.name = name;
+        this.completed = completed;
+    }
+
+    // equals and hashcode and ToString
 
     @Override
     public boolean equals(Object o) {
@@ -39,6 +50,7 @@ public class TodoTask {
         TodoTask todoTask = (TodoTask) o;
 
         if (id != todoTask.id) return false;
+        if (completed != todoTask.completed) return false;
         return name != null ? name.equals(todoTask.name) : todoTask.name == null;
 
     }
@@ -47,14 +59,16 @@ public class TodoTask {
     public int hashCode() {
         int result = id;
         result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + (completed ? 1 : 0);
         return result;
     }
 
     @Override
     public String toString() {
-        return "TodoTask { " +
-                "id = " + id +
-                ", name = '" + name + '\'' +
-                " }";
+        return "TodoTask{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", completed=" + completed +
+                '}';
     }
 }

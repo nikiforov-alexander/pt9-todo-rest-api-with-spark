@@ -37,7 +37,7 @@ public class TodoImplTest {
     }
 
     private TodoTask newTodoTask() {
-        return new TodoTask("TodoTask 1");
+        return new TodoTask("TodoTask 1", false);
     }
 
     @Test
