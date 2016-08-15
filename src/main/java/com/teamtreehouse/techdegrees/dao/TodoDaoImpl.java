@@ -32,7 +32,8 @@ public class TodoDaoImpl implements TodoDao {
     public TodoTask findById(int id) {
         // try open connection
         try (Connection connection = sql2o.open()) {
-            // create simple sql SELECT query, add parameter and fetch todo
+            // create simple sql SELECT query, add parameter and fetch
+            // todoTask
             return connection.createQuery(
                     "SELECT * FROM todos WHERE id = :id")
                     .addParameter("id", id)

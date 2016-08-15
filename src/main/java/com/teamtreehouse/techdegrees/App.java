@@ -64,16 +64,16 @@ public class App {
 
         // save new task: post request to main page
         post("/api/v1/todos", "application/json", (request, response) -> {
-            // get todo task from JSON request made in Angular
+            // get todoTask from JSON request made in Angular
             TodoTask todoTask = gson.fromJson(request.body(), TodoTask.class);
 
-            // save Todo task to db
+            // save TodoTask to db
             todoDao.save(todoTask);
 
             // set response status to CREATED
             response.status(201);
 
-            // return todo task
+            // return todoTask
             return todoTask;
         }, gson::toJson);
 
