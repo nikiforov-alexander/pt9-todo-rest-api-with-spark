@@ -41,7 +41,7 @@ public class TodoImplTest {
     }
 
     @Test
-    public void addingEntrySetsId() throws Exception {
+    public void savingTodoSetsId() throws Exception {
         // Arrange: create new todoTask
         TodoTask todoTask = newTodoTask();
 
@@ -52,5 +52,18 @@ public class TodoImplTest {
         assertEquals(1, newTodoId);
     }
 
+    @Test
+    public void existingTodosCanBeFoundById() throws Exception {
+        // Arrange: create new todoTask
+        TodoTask todoTask = newTodoTask();
+        // add it to test db
+        todoDaoImpl.save(todoTask);
 
+        // Act, and Assert
+        // When findById method is called
+        TodoTask foundTodoTask = todoDaoImpl.findById(todoTask.getId());
+
+        // found todoTask should be equal to original todoTask
+        assertEquals(todoTask, foundTodoTask);
+    }
 }
