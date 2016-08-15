@@ -1,6 +1,6 @@
 package com.teamtreehouse.techdegrees.dao;
 
-import com.teamtreehouse.techdegrees.model.Todo;
+import com.teamtreehouse.techdegrees.model.TodoTask;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -36,17 +36,17 @@ public class TodoImplTest {
         connection.close();
     }
 
-    private Todo newTodo() {
-        return new Todo("Todo 1");
+    private TodoTask newTodoTask() {
+        return new TodoTask("TodoTask 1");
     }
 
     @Test
     public void addingEntrySetsId() throws Exception {
-        // Arrange: create new todo
-        Todo todo = newTodo();
+        // Arrange: create new todoTask
+        TodoTask todoTask = newTodoTask();
 
-        // When todo is added to DAO
-        int newTodoId = todoDaoImpl.save(todo);
+        // When todoTask is added to DAO
+        int newTodoId = todoDaoImpl.save(todoTask);
 
         // Then his index is auto-incremented to 1
         assertEquals(1, newTodoId);

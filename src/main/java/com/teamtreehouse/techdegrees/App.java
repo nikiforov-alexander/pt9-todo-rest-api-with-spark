@@ -5,7 +5,7 @@ import com.google.gson.Gson;
 import com.teamtreehouse.techdegrees.dao.TodoDao;
 import com.teamtreehouse.techdegrees.dao.TodoDaoImpl;
 import com.teamtreehouse.techdegrees.exception.ApiError;
-import com.teamtreehouse.techdegrees.model.Todo;
+import com.teamtreehouse.techdegrees.model.TodoTask;
 import org.sql2o.Sql2o;
 
 import java.util.HashMap;
@@ -52,11 +52,11 @@ public class App {
         // get course by id
         get("/api/v1/todos/:id","application/json", (request, response) -> {
             int id = Integer.parseInt(request.params("id"));
-            Todo todo = todoDao.findById(id);
-            if (todo == null) {
-                throw new ApiError(404, "Could not find todo with id " + id);
+            TodoTask todoTask = todoDao.findById(id);
+            if (todoTask == null) {
+                throw new ApiError(404, "Could not find todoTask with id " + id);
             }
-            return todo;
+            return todoTask;
         }, gson::toJson );
 
         // after each request we make response of type application/json

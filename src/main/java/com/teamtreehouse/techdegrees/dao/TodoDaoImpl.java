@@ -1,7 +1,7 @@
 package com.teamtreehouse.techdegrees.dao;
 
 import com.teamtreehouse.techdegrees.exception.DaoException;
-import com.teamtreehouse.techdegrees.model.Todo;
+import com.teamtreehouse.techdegrees.model.TodoTask;
 import org.sql2o.Connection;
 import org.sql2o.Sql2o;
 import org.sql2o.Sql2oException;
@@ -17,31 +17,31 @@ public class TodoDaoImpl implements TodoDao {
     }
 
     @Override
-    public List<Todo> findAll() {
+    public List<TodoTask> findAll() {
         // open connection: session
         try (Connection connection = sql2o.open()) {
             // create SQL query "SELECT * FROM todos
             return connection.createQuery(
                     "SELECT * FROM todos"
-                   ).executeAndFetch(Todo.class);
+                   ).executeAndFetch(TodoTask.class);
         }
 
     }
 
     @Override
-    public Todo findById(int id) {
+    public TodoTask findById(int id) {
         // try open connection
         try (Connection connection = sql2o.open()) {
             // create simple sql SELECT query, add parameter and fetch todo
             return connection.createQuery(
                     "SELECT * FROM todos WHERE id = :id")
                     .addParameter("id", id)
-                    .executeAndFetchFirst(Todo.class);
+                    .executeAndFetchFirst(TodoTask.class);
         }
     }
 
     @Override
-    public int save(Todo todo) throws DaoException {
+    public int save(TodoTask todoTask) throws DaoException {
         // We insert here only name, without id, because it will be
         // auto-generated
         String sqlQuery = "INSERT INTO todos(name) VALUES(:name)";
@@ -49,11 +49,11 @@ public class TodoDaoImpl implements TodoDao {
         try (Connection connection = sql2o.open()) {
             // get auto-generated id
             int id = (int) connection.createQuery(sqlQuery)
-                    .bind(todo)
+                    .bind(todoTask)
                     .executeUpdate()
                     .getKey();
-            // set new id for our Todo object
-            todo.setId(id);
+            // set new id for our TodoTask object
+            todoTask.setId(id);
             // return id, just for easier testing purposes
             return id;
         } catch (Sql2oException sql2oException) {
@@ -63,12 +63,12 @@ public class TodoDaoImpl implements TodoDao {
     }
 
     @Override
-    public void delete(Todo todo) {
+    public void delete(TodoTask todoTask) {
 
     }
 
     @Override
-    public void update(Todo todo) {
+    public void update(TodoTask todoTask) {
 
     }
 }
