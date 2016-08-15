@@ -11,7 +11,9 @@ import org.sql2o.Connection;
 import org.sql2o.Sql2o;
 import spark.Spark;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static org.junit.Assert.*;
@@ -119,5 +121,52 @@ public class AppTest {
                 apiResponse.getBody(),
                 TodoTask.class);
         assertEquals(firstTestTodoTask, onlyTaskFromResponse);
+    }
+
+    @Test
+    public void getRequestToIndexPageReturnsListOfTodos() throws Exception {
+        // Arrange:
+        // create Map to be converted in JSON in request
+        Map<String, Object> todoTaskMap = new HashMap<>();
+        // put all properties of test TodoTask object there
+        todoTaskMap.put("name", firstTestTodoTask.getName());
+        todoTaskMap.put("edited", firstTestTodoTask.isEdited());
+        todoTaskMap.put("completed", firstTestTodoTask.isCompleted());
+        // because after saving to db id of the test task will be set to 1
+        // we set it here manually
+        firstTestTodoTask.setId(1);
+        // finally we add two test todoTasks to db: should be OK: they will
+        // have different ids
+        apiClient.request(
+                "POST",
+                "/api/v1/todos",
+                gson.toJson(todoTaskMap)
+        );
+        apiClient.request(
+                "POST",
+                "/api/v1/todos",
+                gson.toJson(todoTaskMap)
+        );
+
+        // Act, Assert:
+        // When GET request is made to "/api/v1/todos"
+        ApiResponse apiResponse =
+                apiClient.request(
+                        "GET",
+                        "/api/v1/todos"
+                );
+        // here we convert tasks to array
+        TodoTask[] todoTasks =
+                gson.fromJson(
+                        apiResponse.getBody(),
+                        TodoTask[].class
+                );
+
+        // Then: status should be OK 200
+        assertEquals(200, apiResponse.getStatus());
+        //      length of todoTasks should be one
+        assertEquals(2, todoTasks.length);
+        //      First element should be our test task
+        assertEquals(firstTestTodoTask, todoTasks[0]);
     }
 }
