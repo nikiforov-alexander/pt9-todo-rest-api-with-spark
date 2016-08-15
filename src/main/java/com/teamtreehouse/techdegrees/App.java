@@ -3,13 +3,12 @@ package com.teamtreehouse.techdegrees;
 
 import com.google.gson.Gson;
 import com.teamtreehouse.techdegrees.dao.TodoDao;
-import com.teamtreehouse.techdegrees.dao.TodoImpl;
+import com.teamtreehouse.techdegrees.dao.TodoDaoImpl;
 import com.teamtreehouse.techdegrees.exception.ApiError;
 import com.teamtreehouse.techdegrees.model.Todo;
 import org.sql2o.Sql2o;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import static spark.Spark.*;
@@ -39,21 +38,23 @@ public class App {
         Sql2o sql2o =
                 new Sql2o(connectionString,"","");
         // autowire DAO, connect with sql2o
-        TodoDao todoDao = new TodoImpl(sql2o);
+        TodoDao todoDao = new TodoDaoImpl(sql2o);
         // autowire Gson, create Gson
         Gson gson = new Gson();
+        // static files location so that we can upload our angular to website
+        staticFileLocation("/public");
 
         // index page: all todos are printed
-        get("/", "application/json",
-            (request, response) -> todoDao.findAll(),
+        get("/api/v1/todos", "application/json",
+                (request, response) -> todoDao.findAll(),
                 gson::toJson);
 
         // get course by id
-        get("/courses/:id","application/json", (request, response) -> {
+        get("/api/v1/todos/:id","application/json", (request, response) -> {
             int id = Integer.parseInt(request.params("id"));
             Todo todo = todoDao.findById(id);
             if (todo == null) {
-                throw new ApiError(404, "Could not find course with id " + id);
+                throw new ApiError(404, "Could not find todo with id " + id);
             }
             return todo;
         }, gson::toJson );
