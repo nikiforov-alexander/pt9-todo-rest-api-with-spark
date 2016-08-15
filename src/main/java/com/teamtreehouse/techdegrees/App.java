@@ -6,8 +6,11 @@ import com.teamtreehouse.techdegrees.dao.TodoDao;
 import com.teamtreehouse.techdegrees.dao.TodoDaoImpl;
 import com.teamtreehouse.techdegrees.exception.ApiError;
 import com.teamtreehouse.techdegrees.model.TodoTask;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.sql2o.Sql2o;
 
+import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -58,6 +61,21 @@ public class App {
             }
             return todoTask;
         }, gson::toJson );
+
+        // save new task: post request to main page
+        post("/api/v1/todos", "application/json", (request, response) -> {
+            // get todo task from JSON request made in Angular
+            TodoTask todoTask = gson.fromJson(request.body(), TodoTask.class);
+
+            // save Todo task to db
+            todoDao.save(todoTask);
+
+            // set response status to CREATED
+            response.status(201);
+
+            // return todo task
+            return todoTask;
+        }, gson::toJson);
 
         // after each request we make response of type application/json
         after((request, response) -> response.type("application/json"));

@@ -42,9 +42,11 @@ public class TodoDaoImpl implements TodoDao {
 
     @Override
     public int save(TodoTask todoTask) throws DaoException {
-        // We insert here only name, without id, because it will be
+        // We insert here all fields, except id, because it will be
         // auto-generated
-        String sqlQuery = "INSERT INTO todos(name) VALUES(:name)";
+        String sqlQuery =
+                "INSERT INTO todos(name, completed, edited) " +
+                        "VALUES(:name, :completed, :edited)";
         // open connection
         try (Connection connection = sql2o.open()) {
             // get auto-generated id

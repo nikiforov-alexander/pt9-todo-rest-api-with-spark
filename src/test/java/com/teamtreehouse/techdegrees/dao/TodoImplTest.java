@@ -7,6 +7,8 @@ import org.junit.Test;
 import org.sql2o.Connection;
 import org.sql2o.Sql2o;
 
+import java.util.List;
+
 import static org.junit.Assert.*;
 
 public class TodoImplTest {
@@ -37,7 +39,7 @@ public class TodoImplTest {
     }
 
     private TodoTask newTodoTask() {
-        return new TodoTask("TodoTask 1");
+        return new TodoTask("TodoTask 1", false, true);
     }
 
     @Test
@@ -65,5 +67,20 @@ public class TodoImplTest {
 
         // found todoTask should be equal to original todoTask
         assertEquals(todoTask, foundTodoTask);
+    }
+
+    @Test
+    public void existingTodosCanBeFoundByFindAll() throws Exception {
+        // Arrange: create new todoTask
+        TodoTask todoTask = newTodoTask();
+        // add it to test db
+        todoDaoImpl.save(todoTask);
+
+        // Act, and Assert
+        // When findAll method is called
+        List<TodoTask> todoTaskList = todoDaoImpl.findAll();
+
+        // todoTaskList should be equal to one
+        assertEquals(1, todoTaskList.size());
     }
 }
