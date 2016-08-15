@@ -10,5 +10,5 @@ public interface TodoDao {
     TodoTask findById(int id);
     int save(TodoTask todoTask) throws DaoException;
     void delete(TodoTask todoTask);
-    void update(TodoTask todoTask);
+    void update(TodoTask todoTask) throws DaoException;
 }

@@ -71,7 +71,22 @@ public class TodoDaoImpl implements TodoDao {
     }
 
     @Override
-    public void update(TodoTask todoTask) {
-
+    public void update(TodoTask todoTask) throws DaoException {
+        // create sql query
+        String sqlQuery =
+                "UPDATE todos " +
+                "SET name = :name, completed = :completed, edited = :edited " +
+                "where id = :id";
+        // try with open connection
+        try (Connection connection = sql2o.open()) {
+            // execute update query, binding todoTask to update query
+            connection.createQuery(sqlQuery)
+                    .bind(todoTask)
+                    .executeUpdate();
+        } catch (Sql2oException sql2oException) {
+            // throw exception if something went wrong
+            throw new DaoException(sql2oException,
+                    sql2oException.getMessage());
+        }
     }
 }
