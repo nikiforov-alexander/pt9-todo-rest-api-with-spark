@@ -3,11 +3,13 @@ package com.teamtreehouse.techdegrees;
 
 import com.google.gson.Gson;
 import com.teamtreehouse.techdegrees.dao.TodoDao;
-import com.teamtreehouse.techdegrees.dao.TodoImpl;
-import com.teamtreehouse.techdegrees.model.Todo;
+import com.teamtreehouse.techdegrees.dao.TodoDaoImpl;
+import com.teamtreehouse.techdegrees.exception.ApiError;
+import com.teamtreehouse.techdegrees.model.TodoTask;
 import org.sql2o.Sql2o;
 
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import static spark.Spark.*;
 
@@ -36,17 +38,40 @@ public class App {
         Sql2o sql2o =
                 new Sql2o(connectionString,"","");
         // autowire DAO, connect with sql2o
-        TodoDao todoDao = new TodoImpl(sql2o);
+        TodoDao todoDao = new TodoDaoImpl(sql2o);
         // autowire Gson, create Gson
         Gson gson = new Gson();
+        // static files location so that we can upload our angular to website
+        staticFileLocation("/public");
 
         // index page: all todos are printed
-        get("/", "application/json",
-            (request, response) -> todoDao.findAll(),
+        get("/api/v1/todos", "application/json",
+                (request, response) -> todoDao.findAll(),
                 gson::toJson);
+
+        // get course by id
+        get("/api/v1/todos/:id","application/json", (request, response) -> {
+            int id = Integer.parseInt(request.params("id"));
+            TodoTask todoTask = todoDao.findById(id);
+            if (todoTask == null) {
+                throw new ApiError(404, "Could not find todoTask with id " + id);
+            }
+            return todoTask;
+        }, gson::toJson );
 
         // after each request we make response of type application/json
         after((request, response) -> response.type("application/json"));
+
+        // exception handler
+        exception(ApiError.class, (exception, request, response) -> {
+            ApiError apiError = (ApiError) exception;
+            Map<String, Object> jsonMap = new HashMap<>();
+            jsonMap.put("status", apiError.getStatus());
+            jsonMap.put("errorMessage", apiError.getMessage());
+            response.type("application/json");
+            response.status(apiError.getStatus());
+            response.body(gson.toJson(jsonMap));
+        });
     }
 
 }

@@ -1,6 +1,6 @@
 package com.teamtreehouse.techdegrees.model;
 
-public class Todo {
+public class TodoTask {
     // primary key: auto-generated
     private int id;
     // column in database VARCHAR NAME
@@ -25,7 +25,7 @@ public class Todo {
     }
 
     // only constructor
-    public Todo(String name) {
+    public TodoTask(String name) {
         this.name = name;
     }
 
@@ -36,10 +36,10 @@ public class Todo {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Todo todo = (Todo) o;
+        TodoTask todoTask = (TodoTask) o;
 
-        if (id != todo.id) return false;
-        return name != null ? name.equals(todo.name) : todo.name == null;
+        if (id != todoTask.id) return false;
+        return name != null ? name.equals(todoTask.name) : todoTask.name == null;
 
     }
 
@@ -52,7 +52,7 @@ public class Todo {
 
     @Override
     public String toString() {
-        return "Todo { " +
+        return "TodoTask { " +
                 "id = " + id +
                 ", name = '" + name + '\'' +
                 " }";
