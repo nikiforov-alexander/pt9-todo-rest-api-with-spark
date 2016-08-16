@@ -77,10 +77,39 @@ public class App {
             return todoTask;
         }, gson::toJson);
 
+        // update task: put request to main page
+        put("/api/v1/todos/:id", "application/json", (request, response) -> {
+            // get id parameter from request
+            int id = Integer.parseInt(
+                    request.params("id")
+            );
+
+            // check if todoTask with this id exist
+            if (todoDao.findById(id) == null) {
+                throw new ApiError(404,
+                        "Could not find todoTask with id " + id);
+            }
+
+            // get todoTask from JSON request made in Angular
+            TodoTask todoTask = gson.fromJson(request.body(), TodoTask.class);
+
+            // set todoTask id
+            todoTask.setId(id);
+
+            // save TodoTask to db
+            todoDao.update(todoTask);
+
+            // set response status to OK
+            response.status(200);
+
+            // return todoTask
+            return todoTask;
+        }, gson::toJson);
+
         // after each request we make response of type application/json
         after((request, response) -> response.type("application/json"));
 
-        // exception handler
+        // exception handler for object not found
         exception(ApiError.class, (exception, request, response) -> {
             ApiError apiError = (ApiError) exception;
             Map<String, Object> jsonMap = new HashMap<>();
@@ -88,6 +117,15 @@ public class App {
             jsonMap.put("errorMessage", apiError.getMessage());
             response.type("application/json");
             response.status(apiError.getStatus());
+            response.body(gson.toJson(jsonMap));
+        });
+        // exception handler for parse error
+        exception(NumberFormatException.class, (exception, request, response) -> {
+            Map<String, Object> jsonMap = new HashMap<>();
+            jsonMap.put("status", 500);
+            jsonMap.put("errorMessage", "Error Parsing Id of todo");
+            response.type("application/json");
+            response.status(500);
             response.body(gson.toJson(jsonMap));
         });
     }

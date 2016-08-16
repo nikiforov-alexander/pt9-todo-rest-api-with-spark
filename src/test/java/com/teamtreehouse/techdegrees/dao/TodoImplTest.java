@@ -83,4 +83,22 @@ public class TodoImplTest {
         // todoTaskList should be equal to one
         assertEquals(1, todoTaskList.size());
     }
+
+    @Test
+    public void updateTodosWorks() throws Exception {
+        // Arrange: create new todoTask
+        TodoTask todoTask = newTodoTask();
+        // add it to test db
+        todoDaoImpl.save(todoTask);
+        // change name of todoTask
+        todoTask.setName("new name");
+
+        // Act, and Assert
+        // When update method is called
+        todoDaoImpl.update(todoTask);
+
+        // found todoTask should be equal to original todoTask
+        TodoTask foundTodoTask = todoDaoImpl.findById(todoTask.getId());
+        assertEquals(todoTask, foundTodoTask);
+    }
 }
