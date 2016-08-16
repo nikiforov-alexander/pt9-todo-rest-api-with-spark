@@ -54,16 +54,6 @@ public class App {
                 (request, response) -> todoDao.findAll(),
                 gson::toJson);
 
-        // get course by id
-        get(API_CONTEXT + "/todos/:id","application/json", (request, response) -> {
-            int id = Integer.parseInt(request.params("id"));
-            TodoTask todoTask = todoDao.findById(id);
-            if (todoTask == null) {
-                throw new ApiError(404, "Could not find todoTask with id " + id);
-            }
-            return todoTask;
-        }, gson::toJson );
-
         // save new task: post request to main page
         post(API_CONTEXT + "/todos", "application/json", (request, response) -> {
             // get todoTask from JSON request made in Angular
