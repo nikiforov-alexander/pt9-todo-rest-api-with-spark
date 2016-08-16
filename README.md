@@ -96,7 +96,22 @@
 <hr> <a id="eclipse"></a>
 I generated necessary [.project] and
 [.userlibraries] and added `apply plugin : 'eclipse'` line to
-[build.gradle]. ... Under construction
+[build.gradle]. This time, I accidentally switched some modules
+in intellijidea to eclipse, and now it is very hard to
+run this project in eclipse. I really hope that you are not going
+to run the project in eclipse. If you do here are steps:
+- Reconfigure build path to `src/main/java`
+- run `clean` Gradle task
+- run `eclipse` Gradle task
+- run `build` Gradle task
+- go to `Build Path settings` -> 
+        `Configure Build Path` -> 
+        `Order and Export` -> 
+        `mark Select All tick` ->
+        `OK`
+- and hopefully it will run...
+
+As always link to ols Spark blog [video][spark_blog_readme].
 <hr>
 
 
