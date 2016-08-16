@@ -66,8 +66,22 @@ public class TodoDaoImpl implements TodoDao {
     }
 
     @Override
-    public void delete(TodoTask todoTask) {
-
+    public void delete(TodoTask todoTask) throws DaoException {
+        // create sql query
+        String sqlQuery =
+                "DELETE todos " +
+                        "WHERE id = :id";
+        // try with open connection
+        try (Connection connection = sql2o.open()) {
+            // execute update query, binding todoTask id to delete query
+            connection.createQuery(sqlQuery)
+                    .addParameter("id", todoTask.getId())
+                    .executeUpdate();
+        } catch (Sql2oException sql2oException) {
+            // throw exception if something went wrong
+            throw new DaoException(sql2oException,
+                    sql2oException.getMessage());
+        }
     }
 
     @Override
@@ -76,7 +90,7 @@ public class TodoDaoImpl implements TodoDao {
         String sqlQuery =
                 "UPDATE todos " +
                 "SET name = :name, completed = :completed " +
-                "where id = :id";
+                "WHERE id = :id";
         // try with open connection
         try (Connection connection = sql2o.open()) {
             // execute update query, binding todoTask to update query
