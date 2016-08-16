@@ -9,7 +9,7 @@ import org.sql2o.Sql2o;
 
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class TodoDaoImplTest {
     // our implementation of DAO object
@@ -100,5 +100,22 @@ public class TodoDaoImplTest {
         // found todoTask should be equal to original todoTask
         TodoTask foundTodoTask = todoDaoImpl.findById(todoTask.getId());
         assertEquals(todoTask, foundTodoTask);
+    }
+
+    @Test
+    public void deletingTodoWorks() throws Exception {
+        // Arrange: create new todoTask
+        TodoTask todoTask = newTodoTask();
+        // add it to test db
+        todoDaoImpl.save(todoTask);
+
+        // Act, and Assert
+        // When delete method is called
+        todoDaoImpl.delete(todoTask);
+
+        // Then: only task that was added and deleted had id = 1, so
+        // the task with id = 1 should not be found
+        assertEquals(null, todoDaoImpl.findById(1));
+
     }
 }

@@ -69,7 +69,7 @@ public class App {
             return todoTask;
         }, gson::toJson);
 
-        // update task: put request to main page
+        // update task: put request to main page with :id
         put(API_CONTEXT + "/todos/:id", "application/json", (request, response) -> {
             // get id parameter from request
             int id = Integer.parseInt(
@@ -96,6 +96,32 @@ public class App {
 
             // return todoTask
             return todoTask;
+        }, gson::toJson);
+
+        // delete task: delete request to main page with :id
+        delete(API_CONTEXT + "/todos/:id", "application/json", (request, response) -> {
+            // get id parameter from request
+            int id = Integer.parseInt(
+                    request.params("id")
+            );
+
+            // get todoTask by id
+            TodoTask todoTask = todoDao.findById(id);
+
+            // check if todoTask with this id exist
+            if (todoTask == null) {
+                throw new ApiError(404,
+                        "Could not find todoTask with id " + id);
+            }
+
+            // delete TodoTask from db
+            todoDao.delete(todoTask);
+
+            // set response status to OK/empty body
+            response.status(204);
+
+            // return null/empty body
+            return null;
         }, gson::toJson);
 
         // after each request we make response of type application/json

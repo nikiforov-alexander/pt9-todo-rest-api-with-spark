@@ -3,7 +3,6 @@ package com.teamtreehouse.techdegrees;
 import com.google.gson.Gson;
 import com.teamtreehouse.techdegrees.dao.TodoDao;
 import com.teamtreehouse.techdegrees.dao.TodoDaoImpl;
-import com.teamtreehouse.techdegrees.exception.ApiError;
 import com.teamtreehouse.techdegrees.model.TodoTask;
 import com.teamtreehouse.techdegrees.testing.ApiClient;
 import com.teamtreehouse.techdegrees.testing.ApiErrorModel;
@@ -16,7 +15,7 @@ import spark.Spark;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class AppTest {
     // server port
@@ -181,8 +180,7 @@ public class AppTest {
         //      First element should be our test task
         assertEquals(firstTestTodoTask, todoTasks[0]);
     }
-
-    @Test
+        @Test
     public void updatingTodoTaskActuallyUpdatesTodoTask() throws Exception {
         // Arrange:
         //   1. Here firstTestTodoTask and todoTaskMapWithFirstTestTodoTask will
@@ -222,6 +220,43 @@ public class AppTest {
                 TodoTask.class);
         assertEquals(firstTestTodoTask, updatedTodoTask);
     }
+
+    @Test
+    public void deletingTodoTaskActuallyDeletedTodoTask() throws Exception {
+        // Arrange:
+        //   1. Here firstTestTodoTask and todoTaskMapWithFirstTestTodoTask will
+        //   be used to add test todoTask to db.
+        //   2. We add firstTestTodoTask to database with POST below
+        apiClient.request(
+                "POST",
+                App.API_CONTEXT + "/todos",
+                gson.toJson(todoTaskMapWithFirstTestTodoTask)
+        );
+
+        // Act, Assert:
+        // When DELETE request is made to "/api/v1/todos/1", to delete
+        //  test TodoTask (Here we manually write 1 as id).
+        ApiResponse apiResponse =
+                apiClient.request(
+                        "DELETE",
+                        App.API_CONTEXT + "/todos/1"
+                );
+
+        // Then:
+        // - status should be 204 OK/empty body
+        assertEquals(204, apiResponse.getStatus());
+
+        // - the task from response converted from JSON should be
+        //   null
+        TodoTask deletedTodoTask = gson.fromJson(
+                apiResponse.getBody(),
+                TodoTask.class);
+        assertEquals(null, deletedTodoTask);
+    }
+
+    //
+    // Exception checking tests
+    //
 
     @Test
     public void putRequestToNonExistingTodoReturnsNotFoundStatus()
@@ -282,5 +317,7 @@ public class AppTest {
                 apiErrorModelFromResponse
         );
     }
+
+
 
 }
