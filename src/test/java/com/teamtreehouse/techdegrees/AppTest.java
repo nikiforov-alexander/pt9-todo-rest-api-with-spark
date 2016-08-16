@@ -125,7 +125,7 @@ public class AppTest {
         ApiResponse apiResponse =
                 apiClient.request(
                         "POST",
-                        "/api/v1/todos",
+                        App.API_CONTEXT + "/todos",
                         gson.toJson(todoTaskMapWithFirstTestTodoTask)
                 );
 
@@ -149,12 +149,12 @@ public class AppTest {
         // have different ids
         apiClient.request(
                 "POST",
-                "/api/v1/todos",
+                App.API_CONTEXT + "/todos",
                 gson.toJson(todoTaskMapWithFirstTestTodoTask)
         );
         apiClient.request(
                 "POST",
-                "/api/v1/todos",
+                App.API_CONTEXT + "/todos",
                 gson.toJson(todoTaskMapWithFirstTestTodoTask)
         );
 
@@ -163,7 +163,7 @@ public class AppTest {
         ApiResponse apiResponse =
                 apiClient.request(
                         "GET",
-                        "/api/v1/todos"
+                        App.API_CONTEXT + "/todos"
                 );
         // here we convert tasks to array
         TodoTask[] todoTasks =
@@ -188,7 +188,7 @@ public class AppTest {
         //   2. We add firstTestTodoTask to database with POST below
         apiClient.request(
                 "POST",
-                "/api/v1/todos",
+                App.API_CONTEXT + "/todos",
                 gson.toJson(todoTaskMapWithFirstTestTodoTask)
         );
         //   3. Then we change name of the firstTodoTask
@@ -205,7 +205,7 @@ public class AppTest {
         ApiResponse apiResponse =
                 apiClient.request(
                         "PUT",
-                        "/api/v1/todos/1",
+                        App.API_CONTEXT + "/todos/1",
                         gson.toJson(todoTaskMapWithFirstTestTodoTask)
                 );
 

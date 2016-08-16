@@ -17,6 +17,8 @@ import java.util.Map;
 import static spark.Spark.*;
 
 public class App {
+    // Added static final String with api context
+    static final String API_CONTEXT = "/api/v1";
 
     public static void main(String[] args) {
         // jdbc URL, will be for now embedded db
@@ -48,12 +50,12 @@ public class App {
         staticFileLocation("/public");
 
         // index page: all todos are printed
-        get("/api/v1/todos", "application/json",
+        get(API_CONTEXT + "/todos", "application/json",
                 (request, response) -> todoDao.findAll(),
                 gson::toJson);
 
         // get course by id
-        get("/api/v1/todos/:id","application/json", (request, response) -> {
+        get(API_CONTEXT + "/todos/:id","application/json", (request, response) -> {
             int id = Integer.parseInt(request.params("id"));
             TodoTask todoTask = todoDao.findById(id);
             if (todoTask == null) {
@@ -63,7 +65,7 @@ public class App {
         }, gson::toJson );
 
         // save new task: post request to main page
-        post("/api/v1/todos", "application/json", (request, response) -> {
+        post(API_CONTEXT + "/todos", "application/json", (request, response) -> {
             // get todoTask from JSON request made in Angular
             TodoTask todoTask = gson.fromJson(request.body(), TodoTask.class);
 
@@ -78,7 +80,7 @@ public class App {
         }, gson::toJson);
 
         // update task: put request to main page
-        put("/api/v1/todos/:id", "application/json", (request, response) -> {
+        put(API_CONTEXT + "/todos/:id", "application/json", (request, response) -> {
             // get id parameter from request
             int id = Integer.parseInt(
                     request.params("id")
