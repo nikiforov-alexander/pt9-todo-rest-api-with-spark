@@ -30,6 +30,12 @@
     Handle the request by creating a Todo and setting the proper status code.
     Look at the browser tool to see what is being requested 
     and how and create the appropriate route
+* [4.] (#task-4)
+    When a previously saved Todo is deleted and the save link is clicked, 
+    it will make a request to the server. 
+    Handle the deletion and return 
+    a blank response and the proper status code.
+    <hr>
 
 
 <!--Links-->
@@ -46,8 +52,8 @@
     ./src/test/java/com/teamtreehouse/techdegrees/testing/ApiResponse.java "./src/test/java/com/teamtreehouse/techdegrees/testing/ApiResponse.java"
 [ApiClient]:
     ./src/test/java/com/teamtreehouse/techdegrees/testing/ApiClient.java "./src/test/java/com/teamtreehouse/techdegrees/testing/ApiClient.java"
-[TodoImplTest]:
-    ./src/test/java/com/teamtreehouse/techdegrees/dao/TodoImplTest.java "./src/test/java/com/teamtreehouse/techdegrees/dao/TodoImplTest.java"
+[TodoDaoImplTest]:
+    ./src/test/java/com/teamtreehouse/techdegrees/dao/TodoDaoImplTest.java "./src/test/java/com/teamtreehouse/techdegrees/dao/TodoDaoImplTest.java"
 [AppTest]:
     ./src/test/java/com/teamtreehouse/techdegrees/AppTest.java "./src/test/java/com/teamtreehouse/techdegrees/AppTest.java"
 [TodoTask]:
@@ -129,3 +135,22 @@ I generated necessary [.project] and
     4. we call `todoDao.update` method
 <hr>
 4. <a id="task-4"></a>
+    When a previously saved Todo is deleted and the save link is clicked, 
+    it will make a request to the server. 
+    Handle the deletion and return 
+    a blank response and the proper status code.
+    <hr>
+    - delete("/api/v1/todos/:id") lambda in App handles deletion of todo.
+    - Integration test is [AppTest] method 
+    `deletingTodoTaskActuallyDeletedTodoTask`.
+    - status 204
+    - empty body
+    <br>
+    - `delete` method in [TodoDaoImpl] is used to delete todo from db.
+    - It is tested in [TodoDaoImplTest] class in method `deletingTodoWorks`. 
+    <br>
+<hr>
+5. <a id="task-5"></a>
+    <hr>
+<hr>
+
