@@ -8,3 +8,4 @@ build/
 src/main/resources/static/
 /.idea/encodings.xml
 .idea/dataSources.ids
+/src/main/usr/

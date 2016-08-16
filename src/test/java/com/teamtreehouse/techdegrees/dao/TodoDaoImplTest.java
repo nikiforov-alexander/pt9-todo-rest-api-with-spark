@@ -11,7 +11,7 @@ import java.util.List;
 
 import static org.junit.Assert.*;
 
-public class TodoImplTest {
+public class TodoDaoImplTest {
     // our implementation of DAO object
     private TodoDaoImpl todoDaoImpl;
     // sql2o connection object

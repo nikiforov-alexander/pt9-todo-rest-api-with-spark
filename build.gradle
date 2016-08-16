@@ -2,6 +2,8 @@ group 'com.teamtreehouse.techdegree'
 version '1.0-SNAPSHOT'
 
 apply plugin: 'java'
+// add task eclipse to gradle
+apply plugin: 'eclipse'
 
 sourceCompatibility = 1.8
 

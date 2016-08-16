@@ -3,8 +3,10 @@ package com.teamtreehouse.techdegrees;
 import com.google.gson.Gson;
 import com.teamtreehouse.techdegrees.dao.TodoDao;
 import com.teamtreehouse.techdegrees.dao.TodoDaoImpl;
+import com.teamtreehouse.techdegrees.exception.ApiError;
 import com.teamtreehouse.techdegrees.model.TodoTask;
 import com.teamtreehouse.techdegrees.testing.ApiClient;
+import com.teamtreehouse.techdegrees.testing.ApiErrorModel;
 import com.teamtreehouse.techdegrees.testing.ApiResponse;
 import org.junit.*;
 import org.sql2o.Connection;
@@ -125,7 +127,7 @@ public class AppTest {
         ApiResponse apiResponse =
                 apiClient.request(
                         "POST",
-                        "/api/v1/todos",
+                        App.API_CONTEXT + "/todos",
                         gson.toJson(todoTaskMapWithFirstTestTodoTask)
                 );
 
@@ -149,12 +151,12 @@ public class AppTest {
         // have different ids
         apiClient.request(
                 "POST",
-                "/api/v1/todos",
+                App.API_CONTEXT + "/todos",
                 gson.toJson(todoTaskMapWithFirstTestTodoTask)
         );
         apiClient.request(
                 "POST",
-                "/api/v1/todos",
+                App.API_CONTEXT + "/todos",
                 gson.toJson(todoTaskMapWithFirstTestTodoTask)
         );
 
@@ -163,7 +165,7 @@ public class AppTest {
         ApiResponse apiResponse =
                 apiClient.request(
                         "GET",
-                        "/api/v1/todos"
+                        App.API_CONTEXT + "/todos"
                 );
         // here we convert tasks to array
         TodoTask[] todoTasks =
@@ -188,7 +190,7 @@ public class AppTest {
         //   2. We add firstTestTodoTask to database with POST below
         apiClient.request(
                 "POST",
-                "/api/v1/todos",
+                App.API_CONTEXT + "/todos",
                 gson.toJson(todoTaskMapWithFirstTestTodoTask)
         );
         //   3. Then we change name of the firstTodoTask
@@ -205,7 +207,7 @@ public class AppTest {
         ApiResponse apiResponse =
                 apiClient.request(
                         "PUT",
-                        "/api/v1/todos/1",
+                        App.API_CONTEXT + "/todos/1",
                         gson.toJson(todoTaskMapWithFirstTestTodoTask)
                 );
 
@@ -219,6 +221,66 @@ public class AppTest {
                 apiResponse.getBody(),
                 TodoTask.class);
         assertEquals(firstTestTodoTask, updatedTodoTask);
+    }
+
+    @Test
+    public void putRequestToNonExistingTodoReturnsNotFoundStatus()
+            throws Exception {
+        // Arrange: apiClient is arranged to make PUT request
+        // create ApiErrorModel class, that models ApiError with
+        // "errorMessage" and "status"
+        ApiErrorModel wantedApiErrorModel =
+                new ApiErrorModel("Could not find todoTask with id 123", 404);
+
+        // When we make PUT request to non-existing TodoTask
+        ApiResponse apiResponse = apiClient.request(
+                "PUT",
+                App.API_CONTEXT + "/todos/123",
+                "Some body"
+        );
+        ApiErrorModel apiErrorModelFromResponse =
+                gson.fromJson(apiResponse.getBody(), ApiErrorModel.class);
+        // Then:
+        // 1. arranged errorApiResponse status should be equal to 404
+        assertEquals(
+                404,
+                apiResponse.getStatus()
+        );
+        // 2. ApiErrorModel from response should be as arranged model
+        assertEquals(
+                wantedApiErrorModel,
+                apiErrorModelFromResponse
+        );
+    }
+
+    @Test
+    public void putRequestWithWrongParameterReturnsServerError()
+            throws Exception {
+        // Arrange: apiClient is arranged to make PUT request
+        // create ApiErrorModel class, that models ApiError with
+        // "errorMessage" and "status"
+        ApiErrorModel wantedApiErrorModel =
+                new ApiErrorModel("Error Parsing Id of todo", 500);
+
+        // When we make PUT request to non-existing TodoTask
+        ApiResponse apiResponse = apiClient.request(
+                "PUT",
+                App.API_CONTEXT + "/todos/someText",
+                "Some body"
+        );
+        ApiErrorModel apiErrorModelFromResponse =
+                gson.fromJson(apiResponse.getBody(), ApiErrorModel.class);
+        // Then:
+        // 1. arranged errorApiResponse status should be equal to 500
+        assertEquals(
+                500,
+                apiResponse.getStatus()
+        );
+        // 2. ApiErrorModel from response should be as arranged model
+        assertEquals(
+                wantedApiErrorModel,
+                apiErrorModelFromResponse
+        );
     }
 
 }
