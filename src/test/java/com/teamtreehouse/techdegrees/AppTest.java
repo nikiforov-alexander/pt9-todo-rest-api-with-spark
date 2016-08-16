@@ -268,10 +268,10 @@ public class AppTest {
 
         // the task from response converted from JSON should be
         // exactly our deleted firstTestTodoTask
-        TodoTask updatedTodoTask = gson.fromJson(
+        TodoTask deletedTodoTask = gson.fromJson(
                 apiResponse.getBody(),
                 TodoTask.class);
-        assertEquals(firstTestTodoTask, updatedTodoTask);
+        assertEquals(firstTestTodoTask, deletedTodoTask);
     }
 
 }
