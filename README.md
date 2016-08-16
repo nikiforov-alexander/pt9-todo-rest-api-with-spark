@@ -111,7 +111,7 @@ to run the project in eclipse. If you do here are steps:
         `OK`
 - and hopefully it will run...
 
-As always link to ols Spark blog [video][spark_blog_readme].
+As always link to old Spark blog [README][spark_blog_readme].
 <hr>
 
 
