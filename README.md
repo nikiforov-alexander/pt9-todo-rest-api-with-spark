@@ -57,6 +57,8 @@
     ./src/test/java/com/teamtreehouse/techdegrees/testing/ApiResponse.java "./src/test/java/com/teamtreehouse/techdegrees/testing/ApiResponse.java"
 [ApiClient]:
     ./src/test/java/com/teamtreehouse/techdegrees/testing/ApiClient.java "./src/test/java/com/teamtreehouse/techdegrees/testing/ApiClient.java"
+[ApiErrorModel]:
+    ./src/test/java/com/teamtreehouse/techdegrees/testing/ApiErrorModel.java "./src/test/java/com/teamtreehouse/techdegrees/testing/ApiErrorModel.java"
 [TodoDaoImplTest]:
     ./src/test/java/com/teamtreehouse/techdegrees/dao/TodoDaoImplTest.java "./src/test/java/com/teamtreehouse/techdegrees/dao/TodoDaoImplTest.java"
 [AppTest]:
