@@ -46,8 +46,8 @@ public class TodoDaoImpl implements TodoDao {
         // We insert here all fields, except id, because it will be
         // auto-generated
         String sqlQuery =
-                "INSERT INTO todos(name, completed, edited) " +
-                        "VALUES(:name, :completed, :edited)";
+                "INSERT INTO todos(name, completed) " +
+                        "VALUES(:name, :completed)";
         // open connection
         try (Connection connection = sql2o.open()) {
             // get auto-generated id
@@ -75,7 +75,7 @@ public class TodoDaoImpl implements TodoDao {
         // create sql query
         String sqlQuery =
                 "UPDATE todos " +
-                "SET name = :name, completed = :completed, edited = :edited " +
+                "SET name = :name, completed = :completed " +
                 "where id = :id";
         // try with open connection
         try (Connection connection = sql2o.open()) {

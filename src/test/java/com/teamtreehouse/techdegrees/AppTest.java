@@ -37,7 +37,7 @@ public class AppTest {
 
     // Test todoTask will be the first one in db
     private TodoTask firstTestTodoTask =
-            new TodoTask("Todo 1", false, false);
+            new TodoTask("Todo 1", false);
 
     // test Model Map that will be used to make test POST request with
     // first todoTask
@@ -67,8 +67,6 @@ public class AppTest {
         // fill testTodoTaskMap with data from test TodoTask
         todoTaskMapWithFirstTestTodoTask.put("name",
                 firstTestTodoTask.getName());
-        todoTaskMapWithFirstTestTodoTask.put("edited",
-                firstTestTodoTask.isEdited());
         todoTaskMapWithFirstTestTodoTask.put("completed",
                 firstTestTodoTask.isCompleted());
     }
