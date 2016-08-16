@@ -117,11 +117,11 @@ public class App {
             // delete TodoTask from db
             todoDao.delete(todoTask);
 
-            // set response status to OK
-            response.status(200);
+            // set response status to OK/empty body
+            response.status(204);
 
-            // return todoTask
-            return todoTask;
+            // return null/empty body
+            return null;
         }, gson::toJson);
 
         // after each request we make response of type application/json
