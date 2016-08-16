@@ -80,8 +80,8 @@
     build.gradle "Gradle configuration file: build.gradle"
 [initial_project_files]:
     initial-project-files "directory with initial project files from Treeshouse"
-[instateam.mv.db]: 
-    data/instateam.mv.db "H2 databased used in project: instateam.mv.db"
+[my-todos.mv.db]: 
+    data/my-todos.mv.db "H2 databased used in project: my-todos.mv.db"
 [h2-1.4.192.jar]:
     h2-1.4.192.jar "H2 database jar file, used to launch server h2-1.4.192.jar"
 [.project]:
