@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/nikiforov-alexander/pt9-todo-rest-api-with-spark.svg?branch=master)](https://travis-ci.org/nikiforov-alexander/pt9-todo-rest-api-with-spark)
+[![codecov](https://codecov.io/gh/nikiforov-alexander/pt9-todo-rest-api-with-spark/branch/master/graph/badge.svg)](https://codecov.io/gh/nikiforov-alexander/pt9-todo-rest-api-with-spark)
 
 
 # Techdegree project 9
