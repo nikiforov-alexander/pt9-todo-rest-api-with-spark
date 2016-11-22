@@ -3,8 +3,12 @@
 <head>
   <title></title>
   <link href='https://fonts.googleapis.com/css?family=Varela+Round' rel='stylesheet' type='text/css'>
-  <link rel="stylesheet" href="/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="styles/main.css" type="text/css">
 </head>
+<!--
+    ng-app is a directive : we provide name of our
+    App. That tells angular where to bootstrap our app
+-->
 <body ng-app="todoListApp">
   
   <h1>My TODOs!</h1>
@@ -14,16 +18,20 @@
       <a href="#" ng-click="addTodo()">
         + Add a New Task</a>
       </div>
+      <!--
+           will be recognised with IDE only if we
+           set require 'A' : <todo></todo>
+      -->
     <todo></todo>
    </div>
 
   
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular.min.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular-resource.min.js"></script>
-  <script src="/scripts/app.js"></script>
-  <script src="/scripts/resources/todo.js"></script>
-  <script src="/scripts/controllers/main.js"></script>
-  <script src="/scripts/controllers/todo.js"></script>
-  <script src="/scripts/directives/todo.js"></script>
+  <script src="scripts/app.js"></script>
+  <script src="scripts/resources/todo.js"></script>
+  <script src="scripts/controllers/main.js"></script>
+  <script src="scripts/controllers/todo.js"></script>
+  <script src="scripts/directives/todo.js"></script>
 </body>
 </html>
