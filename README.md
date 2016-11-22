@@ -8,7 +8,6 @@
 <hr>
 
 ### Misc
-- [Structure of the project] (#structure)
 - [Quick Links to files and directories] (#links)
 
 <hr>
@@ -36,6 +35,12 @@
     Handle the deletion and return 
     a blank response and the proper status code.
     <hr>
+* [5.] (#task-5)
+    Add unit tests to test your model and dao implementation
+    <hr>
+* [6.] (#task-6)
+    Add functional testing to prove the API is working as expected
+    <hr>
 
 
 <!--Links-->
@@ -52,6 +57,8 @@
     ./src/test/java/com/teamtreehouse/techdegrees/testing/ApiResponse.java "./src/test/java/com/teamtreehouse/techdegrees/testing/ApiResponse.java"
 [ApiClient]:
     ./src/test/java/com/teamtreehouse/techdegrees/testing/ApiClient.java "./src/test/java/com/teamtreehouse/techdegrees/testing/ApiClient.java"
+[ApiErrorModel]:
+    ./src/test/java/com/teamtreehouse/techdegrees/testing/ApiErrorModel.java "./src/test/java/com/teamtreehouse/techdegrees/testing/ApiErrorModel.java"
 [TodoDaoImplTest]:
     ./src/test/java/com/teamtreehouse/techdegrees/dao/TodoDaoImplTest.java "./src/test/java/com/teamtreehouse/techdegrees/dao/TodoDaoImplTest.java"
 [AppTest]:
@@ -73,8 +80,8 @@
     build.gradle "Gradle configuration file: build.gradle"
 [initial_project_files]:
     initial-project-files "directory with initial project files from Treeshouse"
-[instateam.mv.db]: 
-    data/instateam.mv.db "H2 databased used in project: instateam.mv.db"
+[my-todos.mv.db]: 
+    data/my-todos.mv.db "H2 databased used in project: my-todos.mv.db"
 [h2-1.4.192.jar]:
     h2-1.4.192.jar "H2 database jar file, used to launch server h2-1.4.192.jar"
 [.project]:
@@ -89,7 +96,22 @@
 <hr> <a id="eclipse"></a>
 I generated necessary [.project] and
 [.userlibraries] and added `apply plugin : 'eclipse'` line to
-[build.gradle]. ... Under construction
+[build.gradle]. This time, I accidentally switched some modules
+in intellijidea to eclipse, and now it is very hard to
+run this project in eclipse. I really hope that you are not going
+to run the project in eclipse. If you do here are steps:
+- Reconfigure build path to `src/main/java`
+- run `clean` Gradle task
+- run `eclipse` Gradle task
+- run `build` Gradle task
+- go to `Build Path settings` -> 
+        `Configure Build Path` -> 
+        `Order and Export` -> 
+        `mark Select All tick` ->
+        `OK`
+- and hopefully it will run...
+
+As always link to old Spark blog [README][spark_blog_readme].
 <hr>
 
 
@@ -111,13 +133,12 @@ I generated necessary [.project] and
     Look at the browser tool to see what is being requested
     and how and create the appropriate route
     <hr>
-    get("/api/v1/todos") lambda in [App] is used to process request.
-    <br>
-    `findAll()` method in [TodoDaoImpl] is used to fetch all todos.
-    <br>
-    It is tested in [TodoDaoImplTest] class in
-    test method called `existingTodosCanBeFoundByFindAll` and in 
-    integration test [AppTest] method `getRequestToIndexPageReturnsListOfTodos`
+    - get("/api/v1/todos") lambda in [App] is used to process request.
+    - integration test [AppTest] method is
+    `getRequestToIndexPageReturnsListOfTodos`
+    - `findAll()` method in [TodoDaoImpl] is used to fetch all todos.
+    - It is tested in [TodoDaoImplTest] class in
+    test method called `existingTodosCanBeFoundByFindAll`
 <hr>
 3. <a id="task-3"></a>
     When a Todo is created and the save link is clicked, 
@@ -129,7 +150,7 @@ I generated necessary [.project] and
     post("/api/v1/todos/:id") lambda in [App] handles request to update
     Todo:
     1. We find by id, if such task exists, if not we throw [ApiError],
-      handled in `exception` lambda (Not tested yet).
+      handled in `exception` lambda.
     2. We get from request new TodoTask to update. 
     3. We set id to this new Task
     4. we call `todoDao.update` method
@@ -143,14 +164,73 @@ I generated necessary [.project] and
     - delete("/api/v1/todos/:id") lambda in App handles deletion of todo.
     - Integration test is [AppTest] method 
     `deletingTodoTaskActuallyDeletedTodoTask`.
-    - status 204
-    - empty body
+    - status is 204
+    - request has empty body
     <br>
     - `delete` method in [TodoDaoImpl] is used to delete todo from db.
     - It is tested in [TodoDaoImplTest] class in method `deletingTodoWorks`. 
     <br>
 <hr>
+### Extra Credit 
 5. <a id="task-5"></a>
+    Add unit tests to test your model and dao implementation
     <hr>
+    [TodoDaoImplTest] was implemented with following tests:
+    - `savingTodoSetsId` - checks successful saving of todo task
+    - `existingTodosCanBeFoundById` - not needed in project, but let it be.
+    - `existingTodosCanBeFoundByFindAll` - checks `findAll()` method
+    - `updateTodosWorks` - checks successful update of todoTask
+    - `deletingTodoWorks` - checks successful delete of todoTask
 <hr>
+6. <a id="task-6"></a>
+    Add functional testing to prove the API is working as expected
+    [AppTest] class was implemented with following tests:
+    - `addingTodoReturnsCreatedStatus` - checks 201 status and response body
+    after successful addition of todo.
+    - `getRequestToIndexPageReturnsListOfTodos` - checks 200 status and response
+    body of homepage listing all todos request. 
+    - `updatingTodoTaskActuallyUpdatesTodoTask` - checks 200 status and response
+    body of updating Todo. Here response body is not empty, but It is said that
+    it is optional whether make body empty or not...So for now leave 
+    it as it is.
+    - `deletingTodoTaskActuallyDeletedTodoTask` - checks 204 status and
+    empty response body.
+    - `putRequestToNonExistingTodoReturnsNotFoundStatus` - check 404 status
+    and response body with error message.
+    - `putRequestWithWrongParameterReturnsServerError` - check 500 status and
+    response body with error message (optional test).
+<hr>
+
+### Quick Links <a id="links"></a>
+
+#### External Links
+- [spark_blog_readme]
+    
+#### HTML
+- [todo.html]
+- [index.html]
+    
+#### Java files
+- [ApiResponse]
+- [ApiClient]
+- [ApiErrorModel]
+- [TodoDaoImplTest]
+- [AppTest]
+- [TodoTask]
+- [DaoException]
+- [ApiError]
+- [App]
+- [TodoDaoImpl]
+- [TodoDao]
+    
+#### Properties files
+- [build.gradle]
+- [initial_project_files]
+- [my-todos.mv.db] 
+- [h2-1.4.192.jar]
+- [.project]
+- [.userlibraries]
+    
+#### SQL files
+- [init.sql]
 
