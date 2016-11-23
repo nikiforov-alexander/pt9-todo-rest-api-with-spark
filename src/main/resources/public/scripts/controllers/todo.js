@@ -15,7 +15,8 @@ angular.module('todoListApp')
     });
     filteredTodos.forEach(function(todo) {
       if (todo.id) {
-        todo.$update();
+        // was todo.$update : syntax highlight error
+        Todo.update(todo);
       } else {
         todo.$save();
       }
