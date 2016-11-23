@@ -1,6 +1,6 @@
 body {
   color: #2d3339;
-  font-family: "Varela Round";
+  font-family: "Varela Round", serif;
   text-align: center;
   background: #edeff0;
   font-size: 16px; }
@@ -26,7 +26,7 @@ a {
       cursor: pointer; }
     .list .item .editing-label {
       margin-left: 5px;
-      font-family: "Varela Round";
+      font-family: "Varela Round", serif;
       border-radius: 2px;
       border: 2px solid #a7b9c4;
       font-size: 16px;
